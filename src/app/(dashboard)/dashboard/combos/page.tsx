@@ -52,6 +52,8 @@ import { normalizeComboConfigMode } from "@/shared/constants/comboConfigMode";
 import AutoComboCatalog from "./AutoComboCatalog";
 import KimiComboPresetCard from "./KimiComboPresetCard";
 import { KIMI_CODING_PRESET, hasKimiCodingPreset } from "./kimiComboPreset";
+import FreeComboPresetCard from "./FreeComboPresetCard";
+import { FREE_LLM_PRESET, hasFreeLlmPreset } from "./freeComboPreset";
 import BuilderIntelligentStep from "./BuilderIntelligentStep";
 import IntelligentComboPanel from "./IntelligentComboPanel";
 import {
@@ -742,6 +744,7 @@ export default function CombosPage() {
   const [showUsageGuide, setShowUsageGuide] = useState(true);
   const [recentlyCreatedCombo, setRecentlyCreatedCombo] = useState("");
   const [creatingKimiPreset, setCreatingKimiPreset] = useState(false);
+  const [creatingFreePreset, setCreatingFreePreset] = useState(false);
   const [comboDragIndex, setComboDragIndex] = useState(null);
   const [comboDragOverIndex, setComboDragOverIndex] = useState(null);
   const [savingComboOrder, setSavingComboOrder] = useState(false);
@@ -933,6 +936,16 @@ export default function CombosPage() {
     }
   };
 
+  // Free LLM API preset — same one-click path as the Kimi preset above.
+  const handleCreateFreePreset = async () => {
+    setCreatingFreePreset(true);
+    try {
+      await handleCreate(FREE_LLM_PRESET);
+    } finally {
+      setCreatingFreePreset(false);
+    }
+  };
+
   const handleTestCombo = async (combo) => {
     setTestingCombo(combo.name);
     setTestResults(null);
@@ -1119,6 +1132,12 @@ export default function CombosPage() {
         alreadyCreated={hasKimiCodingPreset(combos)}
         creating={creatingKimiPreset}
         onCreate={handleCreateKimiPreset}
+      />
+
+      <FreeComboPresetCard
+        alreadyCreated={hasFreeLlmPreset(combos)}
+        creating={creatingFreePreset}
+        onCreate={handleCreateFreePreset}
       />
 
       {showUsageGuide && (
